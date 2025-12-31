@@ -20,7 +20,7 @@ src_dir = os.path.dirname(os.path.dirname(__file__))
 sys.path.append(src_dir)
 from utils.data_loader import load_data
 from utils.utils import seed_everything,create_otf_edges,get_feature_mask
-from models.fognn import ScalableFOGNN as FOGNN
+from models.dmpgnn import ScalableDMPGNN as DMPGNN
 
 from feature_propagation import FeaturePropagation
 
@@ -172,7 +172,7 @@ for fold, (train_index, val_index) in enumerate(stratified_kf.split(data.x, data
     # Beginning of the fold
     print(f"==================== Start of Fold {fold + 1} ====================")
 
-    model = FOGNN(drop_rate=drop_rate, num_obs_node_features=data.num_node_features,
+    model = DMPGNN(drop_rate=drop_rate, num_obs_node_features=data.num_node_features,
             num_feat_node_features=data.num_node_features,
             num_layers=2, hidden_size=256, out_channels=num_communities,heads=heads,categorical=categorical,device=device,feat_val_thresh=edge_value_thresh)
     model = model.to(device).double()
@@ -315,3 +315,4 @@ print("Mean Metrics Across Folds:")
 for metric, mean_value in mean_numerical_metrics.items():
     std_value = std_numerical_metrics[metric]
     print(f"{metric}: {mean_value * 100:.2f} ± {std_value:.2f}")
+
